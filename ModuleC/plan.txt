@@ -1,0 +1,17 @@
+Étape 3 — Génération texte (tags réponse → réponse)
+
+Objectif : écrire la phrase finale.
+
+Options
+	1.	Templates + slots (ultra fiable, au début)
+	•	“Je vois le mood: {emotion}. {reaction_line}. {punchline}.”
+	2.	LLM compact finetuné instruction (meilleur naturel)
+	•	un petit modèle 1B–7B quantisé peut suffire
+	•	tu lui donnes : prompt original + tags + contraintes + exemples
+	3.	Hybride
+	•	templates pour structure + LLM pour reformulation
+
+Important : impose des règles :
+	•	longueur max
+	•	pas de contenu interdit (violence, harcèlement, etc.)
+	•	pas de “@”, pas de hashtags, pas de mentions, etc.

@@ -1,0 +1,11 @@
+Étape 1 — Compréhension / Émotions → Tags (prompt → tags)
+
+Objectif : extraire situation + intention + émotion + tonalité + cible.
+
+Approche pragmatique
+	•	Commence avec un modèle de classification (pas un LLM) :
+	•	un mini-Transformer type DistilBERT (ou équivalent), finetuné multi-label
+	•	ou même un modèle TF-IDF + logistic regression au début (rapide, efficace).
+	•	Output = multi-label sur ton dictionnaire de tags.
+
+Pourquoi : c’est stable, contrôlable, rapide, et tu peux imposer ton dictionnaire sans “hallucinations”.

@@ -1,0 +1,4 @@
+	•	Module A (classifier) : prompt → tags
+	•	Module B (policy engine) : tags → reaction plan / tags réponse
+	•	Module C (generator) : plan → texte
+	•	Module D (retrieval/ranker) : plan + tags → meme template

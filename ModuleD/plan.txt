@@ -1,0 +1,11 @@
+Étape 4 — Sélection du meme (tags réponse + tags prompt → template meme)
+
+Objectif : choisir une image/template parmi ton catalogue.
+
+Approche solide
+	•	Tu décris chaque template meme par :
+	•	tags (émotion, ton, intensité, “situation type”)
+	•	contraintes (texte long/texte court, 1 ligne/2 lignes, etc.)
+	•	Sélection = ranking (cosine similarity sur embeddings de tags, ou simple score pondéré)
+
+Ensuite tu fais ton rendu (ce que tu fais déjà avec render.py).

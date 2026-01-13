@@ -1,0 +1,17 @@
+Étape 2 — “Réaction humaine” → Tags de réponse (tags prompt → tags réponse)
+
+Objectif : décider la réaction, pas écrire la phrase.
+
+Exemples de tags réponse :
+	•	ton : sarcastic, supportive, cold, hyped, mocking
+	•	acte : reassure, roast, agree, disagree, one-liner, explain
+	•	intensité : low/medium/high
+	•	format : short, 2-sentences, setup+punchline
+
+Approche
+	•	Ici tu peux faire règles + scoring (au début) :
+	•	ex : si sad + self_deprecating → supportive + reassure + short
+	•	si bragging + cocky → tease + sarcastic
+	•	Ensuite, tu peux remplacer par un petit modèle (classification) si tu veux plus de nuance.
+
+Pourquoi : tu gardes le contrôle sur le style, et tu évites un LLM qui part en freestyle.
