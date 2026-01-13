@@ -1,5 +1,5 @@
 {"id":"5stars_sullivan","file":"5stars_sullivan.jpeg","tags":["flex","hype","approve"],"triggers":["five stars","5 stars","ten out of ten","10 out of 10","masterpiece"],"text":{"mode":"bottom","font_size":52,"stroke":4}}
-{"id":"a_bob_razowsky","file":"A+BobRazowsky.jpeg","tags":["flex","hype","brag"],"triggers":["a plus","a+","excellent","great job","nailed it"],"text":{"mode":"bottom","font_size":52,"stroke":4}}
+{"id":"a_bob_razowsky","file":"A+BobRazowsky.jpeg","tags":["flex","brag"],"triggers":["a plus","a+","excellent","great job","nailed it"],"text":{"mode":"bottom","font_size":52,"stroke":4}}
 {"id":"absolute_cinema","file":"AbsoluteCinema.jpeg","tags":["absolute_cinema","flex","hype","plot_twist"],"triggers":["absolute cinema","this is cinema","peak cinema","cinema","oscar worthy"],"text":{"mode":"bottom","font_size":52,"stroke":4}}
 {"id":"idk_dexter","file":"IDK_dexter.jpeg","tags":["idk","confusion"],"triggers":["idk","i dont know","i don't know","no idea","who knows"],"text":{"mode":"bottom","font_size":52,"stroke":4}}
 {"id":"i_gess_bro_war_dogs","file":"I_Gess_Bro_WarDogs.jpeg","tags":["boredom","reject","weird","cringe"],"triggers":["i guess","sure bro","ok bro","whatever","cool story"],"text":{"mode":"bottom","font_size":52,"stroke":4}}

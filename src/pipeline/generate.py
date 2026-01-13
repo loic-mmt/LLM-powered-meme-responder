@@ -69,6 +69,7 @@ Rules:
 - Max 80 characters.
 - No emojis.
 - Match the vibe tags: {tags}
+- Don't integrate the tags inside the caption.
 - Make it meme-like: short, punchy.
 
 USER_PROMPT: {user_prompt}
@@ -114,7 +115,7 @@ def generate(prompt: str, out_path: str = "outputs/out.png", default_id: str = "
         str(img_path),
         caption,
         out_path,
-        font_size=text_cfg.get("font_size", 52),
+        font_size=text_cfg.get("font_size", 32),
         stroke=text_cfg.get("stroke", 4),
     )
 
