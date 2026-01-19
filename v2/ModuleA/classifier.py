@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Iterable, Sequence
+import re
+import json
 
 
 @dataclass(frozen=True)
@@ -13,13 +15,22 @@ class TagPrediction:
 def load_tag_dictionary(path: str) -> list[str]:
     """Load the allowed tag dictionary from disk."""
     # TODO: Parse tags.jsonl or a similar source and return a stable tag list.
-    raise NotImplementedError("TODO: implement tag dictionary loading")
+    items = []
+    with path.open("r", encoding= "utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line :
+                items.append(json.loads(line))
+    return items
 
 
 def normalize_prompt(prompt: str) -> str:
     """Normalize prompt text before vectorization or inference."""
     # TODO: Add consistent normalization (lowercasing, punctuation cleanup).
-    return prompt.strip()
+    prompt = prompt.lower().strip()
+    prompt = re.sub(r"[^\w\s']", " ", prompt)
+    prompt = re.sub(r"\s+", " ", prompt)
+    return prompt
 
 
 def train_multilabel_classifier(
