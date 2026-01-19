@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Iterable, Sequence
+import json
+from pathlib import Path
 
 
 @dataclass(frozen=True)
@@ -14,23 +16,90 @@ class ReactionPlan:
 
 def load_policy_rules(path: str) -> list[dict]:
     """Load rule definitions that map prompt tags to reaction tags."""
-    # TODO: Define a small JSON/YAML rule format and parse it here.
-    raise NotImplementedError("TODO: implement rule loading")
+    # Minimal rule schema:
+    # {
+    #   "when": ["sad", "self_deprecating"],
+    #   "tone": "supportive",
+    #   "acts": ["reassure"],
+    #   "intensity": "low",
+    #   "format": "short",
+    #   "weight": 1.0
+    # }
+
+    # Read and parse JSON array of rules from disk.
+    rule_path = Path(path)
+    data = json.loads(rule_path.read_text(encoding="utf-8"))
+    if not isinstance(data, list):
+        raise ValueError("policy rules file must contain a JSON array")
+
+    # Validate and normalize each rule.
+    normalized_rules: list[dict] = []
+    for idx, rule in enumerate(data):
+        # Check required structure and types first.
+        if not isinstance(rule, dict):
+            raise ValueError(f"rule {idx} must be an object")
+        for key in ("when", "tone", "acts", "intensity", "format"):
+            if key not in rule:
+                raise ValueError(f"rule {idx} missing required key: {key}")
+
+        when = rule["when"]
+        acts = rule["acts"]
+        if not isinstance(when, list) or not all(isinstance(t, str) for t in when):
+            raise ValueError(f"rule {idx} 'when' must be a list of strings")
+        if not isinstance(acts, list) or not all(isinstance(t, str) for t in acts):
+            raise ValueError(f"rule {idx} 'acts' must be a list of strings")
+        if not isinstance(rule["tone"], str):
+            raise ValueError(f"rule {idx} 'tone' must be a string")
+        if not isinstance(rule["intensity"], str):
+            raise ValueError(f"rule {idx} 'intensity' must be a string")
+        if not isinstance(rule["format"], str):
+            raise ValueError(f"rule {idx} 'format' must be a string")
+
+        # Optional weight controls rule strength.
+        weight = rule.get("weight", 1.0)
+        if not isinstance(weight, (int, float)) or weight < 0:
+            raise ValueError(f"rule {idx} 'weight' must be a non-negative number")
+
+        # Normalize tag strings to match Module A output.
+        normalized_rules.append(
+            {
+                "when": [t.strip().lower() for t in when if t.strip()],
+                "tone": rule["tone"].strip().lower(),
+                "acts": [t.strip().lower() for t in acts if t.strip()],
+                "intensity": rule["intensity"].strip().lower(),
+                "format": rule["format"].strip().lower(),
+                "weight": float(weight),
+            }
+        )
+
+    return normalized_rules
 
 
 def score_rules(prompt_tags: Sequence[str], rules: Iterable[dict]) -> list[tuple[dict, float]]:
     """Score rules for a given set of prompt tags."""
-    # TODO: Implement weighted matching and return sorted rule scores.
+    # TODO: Suggested path:
+    # 1) For each rule, count overlap between rule["when"] and prompt_tags.
+    # 2) Optionally apply per-tag weights or a global rule weight.
+    # 3) Score = overlap / len(rule["when"]) (or weighted sum).
+    # 4) Return list of (rule, score) sorted by score desc.
     raise NotImplementedError("TODO: implement rule scoring")
 
 
 def derive_reaction_plan(prompt_tags: Sequence[str], rules: Iterable[dict]) -> ReactionPlan:
     """Derive reaction tags (tone/acts/intensity/format) from prompt tags."""
-    # TODO: Select best rule or blend multiple rules into a single plan.
+    # TODO: Suggested path:
+    # 1) Call score_rules and take top-1 rule if score >= threshold.
+    # 2) If no strong match, fall back to a default neutral plan.
+    # 3) Optionally merge top-N rules (e.g., combine acts) with precedence.
+    # 4) Return ReactionPlan(tone, acts, intensity, format).
     raise NotImplementedError("TODO: implement reaction plan selection")
 
 
 def reaction_plan_to_tags(plan: ReactionPlan) -> list[str]:
     """Flatten a reaction plan into response tags."""
-    # TODO: Decide tag serialization format (e.g., tone:sarcastic).
+    # TODO: Suggested path:
+    # 1) Standardize output tags, e.g.:
+    #    ["tone:sarcastic", "act:roast", "intensity:high", "format:short"].
+    # 2) Keep acts as multiple entries.
+    # 3) Use this output to drive Module C and Module D.
     raise NotImplementedError("TODO: implement tag flattening")

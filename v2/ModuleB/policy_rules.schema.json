@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Policy Rules",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["when", "tone", "acts", "intensity", "format"],
+    "properties": {
+      "when": {
+        "type": "array",
+        "items": { "type": "string", "minLength": 1 },
+        "minItems": 1
+      },
+      "tone": { "type": "string", "minLength": 1 },
+      "acts": {
+        "type": "array",
+        "items": { "type": "string", "minLength": 1 },
+        "minItems": 1
+      },
+      "intensity": { "type": "string", "minLength": 1 },
+      "format": { "type": "string", "minLength": 1 },
+      "weight": { "type": "number", "minimum": 0 }
+    }
+  }
+}
