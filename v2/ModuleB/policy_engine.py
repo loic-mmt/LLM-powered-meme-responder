@@ -77,12 +77,20 @@ def load_policy_rules(path: str) -> list[dict]:
 
 def score_rules(prompt_tags: Sequence[str], rules: Iterable[dict]) -> list[tuple[dict, float]]:
     """Score rules for a given set of prompt tags."""
-    # TODO: Suggested path:
-    # 1) For each rule, count overlap between rule["when"] and prompt_tags.
-    # 2) Optionally apply per-tag weights or a global rule weight.
-    # 3) Score = overlap / len(rule["when"]) (or weighted sum).
-    # 4) Return list of (rule, score) sorted by score desc.
-    raise NotImplementedError("TODO: implement rule scoring")
+    # Use a set for fast overlap checks.
+    prompt_set = {tag.strip().lower() for tag in prompt_tags if tag}
+    scored: list[tuple[dict, float]] = []
+    for rule in rules:
+        when_tags = rule.get("when", [])
+        if not when_tags:
+            continue
+        overlap = prompt_set.intersection(when_tags)
+        base_score = len(overlap) / len(when_tags)
+        weight = float(rule.get("weight", 1.0))
+        scored.append((rule, base_score * weight))
+
+    scored.sort(key=lambda item: item[1], reverse=True)
+    return scored
 
 
 def derive_reaction_plan(prompt_tags: Sequence[str], rules: Iterable[dict]) -> ReactionPlan:
