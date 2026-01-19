@@ -51,9 +51,16 @@ def render_from_template(
 ) -> str:
     """Render a response using a template and reaction plan."""
     # TODO: Suggested path:
-    # 1) Build a slot dict: tone/acts/intensity/format/prompt.
-    # 2) Join acts into a short phrase (e.g., "reassure + tease").
-    # 3) Use str.format_map with safe defaults for missing keys.
+    # 1) Build a slot dict with: prompt, tone, intensity, format, acts.
+    # 2) Convert acts list to a readable string:
+    #    - if empty -> "acknowledge"
+    #    - if one -> that act
+    #    - if many -> "act1 + act2 + act3"
+    # 3) Normalize all slot values (lowercase, trim).
+    # 4) Render with template.format_map(slots).
+    # 5) If a slot is missing, either:
+    #    - fill with "" or a default value, or
+    #    - raise a ValueError with the missing key.
     raise NotImplementedError("TODO: implement template rendering")
 
 
