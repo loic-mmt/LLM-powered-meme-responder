@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Sequence
 from pathlib import Path
 import json
+import re
 
 from v2.ModuleB.policy_engine import ReactionPlan, normalize_token
 
@@ -74,13 +75,49 @@ def render_from_template(
     
 
 
+def remove_emojis(text: str) -> str:
+    """Remove most emoji and pictographic unicode characters."""
+    emoj = re.compile("["
+        u"\U0001F600-\U0001F64F"  # emoticons
+        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+        u"\U0001F680-\U0001F6FF"  # transport & map symbols
+        u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+        u"\U00002500-\U00002BEF"  # chinese char
+        u"\U00002702-\U000027B0"
+        u"\U000024C2-\U0001F251"
+        u"\U0001f926-\U0001f937"
+        u"\U00010000-\U0010ffff"
+        u"\u2640-\u2642" 
+        u"\u2600-\u2B55"
+        u"\u200d"
+        u"\u23cf"
+        u"\u23e9"
+        u"\u231a"
+        u"\ufe0f"  # dingbats
+        u"\u3030"
+                      "]+", re.UNICODE)
+    return re.sub(emoj, "", text)
+
+
 def apply_constraints(text: str, constraints: GenerationConstraints) -> str:
     """Enforce output constraints (length, banned patterns)."""
-    # TODO: Suggested path:
-    # 1) Remove @mentions and #hashtags if forbidden.
-    # 2) Collapse multiple spaces and strip.
-    # 3) Truncate to max_chars without cutting mid-word if possible.
-    raise NotImplementedError("TODO: implement constraint enforcement")
+    if constraints.forbid_mentions:
+        # Remove tokens starting with @
+        text = re.sub(r"@\w+", "", text)
+    if constraints.forbid_hashtags:
+        # Remove tokens starting with #
+        text = re.sub(r"#\w+", "", text)
+
+    # Remove emojis and normalize whitespace.
+    text = remove_emojis(text)
+    text = " ".join(text.split()).strip()
+
+    # Truncate to max_chars without cutting mid-word when possible.
+    if len(text) > constraints.max_chars:
+        cut = text[:constraints.max_chars].rstrip()
+        last_space = cut.rfind(" ")
+        return cut if last_space == -1 else cut[:last_space]
+    return text
 
 
 def generate_response(
@@ -95,4 +132,11 @@ def generate_response(
     # 2) Render text with render_from_template.
     # 3) Optionally pass through LLM for paraphrase.
     # 4) Apply constraints and return final string.
+    # More detailed path:
+    # - If templates is empty, raise ValueError.
+    # - Pick a template deterministically (e.g., hash(prompt) % len(templates))
+    #   or randomly for variety.
+    # - Render with render_from_template(prompt, reaction_plan, template).
+    # - If constraints is None, use GenerationConstraints().
+    # - Call apply_constraints and return the final string.
     raise NotImplementedError("TODO: implement response generation")
