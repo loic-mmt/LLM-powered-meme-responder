@@ -139,4 +139,10 @@ def generate_response(
     # - Render with render_from_template(prompt, reaction_plan, template).
     # - If constraints is None, use GenerationConstraints().
     # - Call apply_constraints and return the final string.
+    if not templates:
+        raise ValueError("Template is empty")
+    
+    template = load_templates(Path("..."))
+    render_from_template(prompt=prompt, reaction_plan=reaction_plan, template=template)
+
     raise NotImplementedError("TODO: implement response generation")
